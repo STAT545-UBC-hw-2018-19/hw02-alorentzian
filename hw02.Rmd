@@ -1,0 +1,135 @@
+---
+title: "HW02"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+I will be using the gapminder data set for this exploration
+```{r}
+library(gapminder)
+library(tidyverse)
+```
+
+First I will explore the data set to familiarize myself with it
+
+```{r}
+class(gapminder)
+str(gapminder)
+names(gapminder)
+ncol(gapminder)
+nrow(gapminder)
+```
+Now I can see that it is a tibble data.frame, I can see the column headers, and number of columns and rows.
+
+Next I will explore a bit more information about countries and their populations
+
+```{r}
+
+summary(gapminder)
+
+
+```
+I have some basic information now about the values and distribution 
+
+```
+
+
+Next I will try some plots to visualize the data better
+
+```{r}
+ggplot(gapminder, aes(x=lifeExp, y=pop)) + 
+  geom_point()
+ggplot(gapminder, aes(gdpPercap, pop)) +
+  geom_point()
+
+ggplot(gapminder, aes(lifeExp)) +
+  geom_histogram(bins=50)
+
+ggplot(gapminder, aes(lifeExp)) +
+  geom_histogram() +
+  scale_x_log10()
+```
+
+
+
+Now I will compare one category to one numberical variable and see what looks best. 
+
+```{r}
+a <- ggplot(gapminder, aes(country, pop))
+
+a + geom_boxplot()
+a + geom_violin()
+```
+
+This is a lot of data to visualize this way so I will narrow it down to continent instead.
+```{r}
+ggplot(gapminder, aes(continent, pop)) +
+  geom_boxplot()
+
+```
+
+
+Now I'm going to filter my data to look at countries with life expectancy greater than 50.
+
+```{r}
+gapminder %>% 
+  filter(lifeExp > 50)
+  
+```
+Now I am curious about just life exp and population in the different countries. 
+
+```{r}
+
+gapminder %>% 
+select(country, lifeExp, pop)
+```
+
+Now I am just curious about countries in africa that have a life expentancy greater than 50.
+```{r}
+gapminder %>% 
+  filter(lifeExp > 50) %>% 
+  filter(continent == "Africa")
+```
+
+
+Now I will look at this data in terms of population and select that data frame to  do some plots. First I will assign my filter a variable and then try different plots to see what looks best.
+
+```{r}
+c <- gapminder %>% 
+  filter(lifeExp > 50) %>% 
+  filter(continent == "Africa")
+
+c %>% 
+  ggplot(aes(country,lifeExp)) +
+  geom_point()
+```
+
+```{r}
+c %>% 
+  ggplot(aes(country,lifeExp)) +
+  geom_boxplot()
+```
+
+
+
+It's difficult to see the labels so I looked up how to do the labels vertically
+```{r}
+c %>% 
+  ggplot(aes(country,lifeExp)) +
+  geom_boxplot() +
+  theme(axis.text.x=element_text(angle=90))
+```
+Lets make it colorful!
+
+
+```{r}
+c %>% 
+  ggplot(aes(country,lifeExp)) +
+  geom_boxplot(fill="tomato") +
+  theme(axis.text.x=element_text(angle=90))
+```
+
+
+
